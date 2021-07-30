@@ -10,9 +10,11 @@ function App() {
 
   return (
     <ThemeContext.Provider value={{ theme, setTheme }}>
-      <div className={"App " + theme}>
-        <Header />
-        <Characters />
+      <div className={theme}>
+        <div className="App">
+          <Header />
+          <Characters />
+        </div>
       </div>
     </ThemeContext.Provider>
   );
