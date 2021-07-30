@@ -14,6 +14,14 @@
   color: #252525;
 }
 
+.Add {
+  border: 1px solid gray;
+}
+
+.Remove {
+  border: 1px solid red;
+}
+
 @media screen and (max-width: 768px) {
   .App {
     width: 98%;
