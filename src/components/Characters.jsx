@@ -4,6 +4,15 @@ import Character from './Character';
 import Favorite from './Favorite';
 
 const styles = {
+  Filter: {
+    alignItems: "center",
+    display: "flex",
+    justifyContent: "center",
+    margin: "12px auto",
+  },
+  Title: {
+    margin: "2px 0",
+  },
   Characters: {
     alignItems: "center",
     display: "flex",
@@ -37,33 +46,51 @@ const Characters = () => {
     dispatch({ type: "REMOVE_FAVORITE", payload: favorite })
   };
 
-  return (
-    <div className="Characters" style={styles.Characters}>
-      {favorites.favorites.length > 0 && favorites.favorites.map(fav => (
-        <div key={fav.id}>
-          <Favorite
-            key={fav.id}
-            character={fav}
-          />
-          <div className="Remove" style={styles.Favorite} onClick={() => handleRemoveFavorite(fav)}>
-            Quitar favorito
-          </div>
-        </div>
-      ))}
+  const [search, setSearch] = useState("");
 
-      {characters.map(character => (
-        <div key={character.id}>
-          <Character
-            key={character.id}
-            character={character}
-            favorite={handleFavorite}
-          />
-          <div className="Add" style={styles.Favorite}onClick={() => handleFavorite(character)}>
-            Añadir favorito
+  const filteredCharacters = characters.filter(character => {
+    return character.name.toLowerCase().includes(search.toLowerCase())
+  });
+
+  return (
+    <>
+      <div className="Filter" style={styles.Filter}>
+        <label htmlFor="searchBar">Ingresa nombre a buscar: </label>
+        <input type="text" name="searchBar" value={search} onChange={e => setSearch(e.target.value)}/>
+      </div>
+
+      {favorites.favorites.length > 0 && <h3 style={styles.Title}>Favoritos</h3>}
+      <div className="Characters" style={styles.Characters}>
+        {favorites.favorites.length > 0 && favorites.favorites.map(fav => (
+          <div key={fav.id}>
+            <Favorite
+              key={fav.id}
+              character={fav}
+            />
+            <div className="Remove" style={styles.Favorite} onClick={() => handleRemoveFavorite(fav)}>
+              Quitar favorito
+            </div>
           </div>
-        </div>
-      ))}
-    </div>
+        ))}
+      </div>
+
+      <h3 style={styles.Title}>Todos los personajes</h3>
+      {filteredCharacters.length === 0 && <h5 style={styles.Title}>No hay resultados para: {search}</h5>}
+      <div className="Characters" style={styles.Characters}>
+        {filteredCharacters.map(character => (
+          <div key={character.id}>
+            <Character
+              key={character.id}
+              character={character}
+              favorite={handleFavorite}
+            />
+            <div className="Add" style={styles.Favorite}onClick={() => handleFavorite(character)}>
+              Añadir favorito
+            </div>
+          </div>
+        ))}
+      </div>    
+    </>    
   );
 }
 
