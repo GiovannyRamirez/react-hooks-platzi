@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useReducer } from 'react';
+import React, { useState, useEffect, useReducer, useMemo } from 'react';
 import { favoriteReducer, initialState } from '../reducers/favoriteReducer';
 import Character from './Character';
 import Favorite from './Favorite';
@@ -48,9 +48,16 @@ const Characters = () => {
 
   const [search, setSearch] = useState("");
 
-  const filteredCharacters = characters.filter(character => {
-    return character.name.toLowerCase().includes(search.toLowerCase())
-  });
+  // const filteredCharacters = characters.filter(character => {
+  //   return character.name.toLowerCase().includes(search.toLowerCase())
+  // });
+
+  const filteredCharacters = useMemo(() =>
+    characters.filter(character => {
+      return character.name.toLowerCase().includes(search.toLowerCase())
+    }),
+    [characters, search]
+  );
 
   return (
     <>
