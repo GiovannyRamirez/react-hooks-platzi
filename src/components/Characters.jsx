@@ -1,15 +1,10 @@
-import React, { useState, useEffect, useReducer, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useReducer, useMemo, useRef, useCallback } from 'react';
 import { favoriteReducer, initialState } from '../reducers/favoriteReducer';
 import Character from './Character';
 import Favorite from './Favorite';
+import Search from './Search';
 
 const styles = {
-  Filter: {
-    alignItems: "center",
-    display: "flex",
-    justifyContent: "center",
-    margin: "12px auto",
-  },
   Title: {
     margin: "2px 0",
   },
@@ -60,20 +55,14 @@ const Characters = () => {
   );
 
   const searchInput = useRef(null);
+  const handleSearch = useCallback(() => {
+    setSearch(searchInput.current.value);
+  }, []);
 
   return (
     <>
-      <div className="Filter" style={styles.Filter}>
-        <label htmlFor="searchBar">Ingresa nombre a buscar: </label>
-        {/* <input type="text" name="searchBar" value={search} onChange={e => setSearch(e.target.value)}/> */}
-        <input 
-          ref={searchInput}
-          type="text"
-          name="searchBar"
-          value={search}
-          onChange={() => setSearch(searchInput.current.value)}
-        />
-      </div>
+      {/* <Search search={search} searchInput={searchInput} handleSearch={() => setSearch(searchInput.current.value)} /> */}
+      <Search search={search} searchInput={searchInput} handleSearch={handleSearch} />
 
       {favorites.favorites.length > 0 && <h3 style={styles.Title}>Favoritos</h3>}
       <div className="Characters" style={styles.Characters}>
