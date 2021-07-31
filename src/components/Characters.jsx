@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useReducer, useMemo, useRef, useCallback } from 'react';
+import React, { useState, useReducer, useMemo, useRef, useCallback } from 'react';
+import useCharacters from '../hooks/useCharacters';
 import { favoriteReducer, initialState } from '../reducers/favoriteReducer';
 import Character from './Character';
 import Favorite from './Favorite';
@@ -24,14 +25,10 @@ const styles = {
 
 const Characters = () => {
 
-  const [characters, setCharacters] = useState([]);
   const [favorites, dispatch] = useReducer(favoriteReducer, initialState);
 
-  useEffect(() => {
-    fetch("https://rickandmortyapi.com/api/character")
-      .then(res => res.json())
-      .then(data => setCharacters(data.results))
-  }, []);
+  const API = "https://rickandmortyapi.com/api/character";
+  const characters = useCharacters(API);
 
   const handleFavorite = favorite => {
     dispatch({ type: "ADD_TO_FAVORITE", payload: favorite })
