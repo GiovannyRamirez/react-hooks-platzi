@@ -27,8 +27,8 @@ const Characters = () => {
 
   const [favorites, dispatch] = useReducer(favoriteReducer, initialState);
 
-  const API = "https://rickandmortyapi.com/api/character";
-  const characters = useCharacters(API);
+  const [search, setSearch] = useState("");
+  const [characters, loading] = useCharacters(`?name=${search}`);
 
   const handleFavorite = favorite => {
     dispatch({ type: "ADD_TO_FAVORITE", payload: favorite })
@@ -38,14 +38,12 @@ const Characters = () => {
     dispatch({ type: "REMOVE_FAVORITE", payload: favorite })
   };
 
-  const [search, setSearch] = useState("");
-
   // const filteredCharacters = characters.filter(character => {
   //   return character.name.toLowerCase().includes(search.toLowerCase())
   // });
 
   const filteredCharacters = useMemo(() =>
-    characters.filter(character => {
+    characters?.filter(character => {
       return character.name.toLowerCase().includes(search.toLowerCase())
     }),
     [characters, search]
@@ -77,9 +75,14 @@ const Characters = () => {
       </div>
 
       <h3 style={styles.Title}>Todos los personajes</h3>
-      {filteredCharacters.length === 0 && <h5 style={styles.Title}>No hay resultados para: {search}</h5>}
+      {loading && <h5 style={styles.Title}>Cargando ...</h5>}
+      {
+        !loading && 
+        (filteredCharacters?.length === 0 || filteredCharacters === undefined) && 
+        <h5 style={styles.Title}>No hay resultados para: {search}</h5>
+      }
       <div className="Characters" style={styles.Characters}>
-        {filteredCharacters.map(character => (
+        {filteredCharacters?.map(character => (
           <div key={character.id}>
             <Character
               key={character.id}
@@ -92,6 +95,13 @@ const Characters = () => {
           </div>
         ))}
       </div>    
+
+      {/* <button
+        onClick={handleFetchMore}
+        style={styles.FetchMore}
+      >
+
+      </button> */}
     </>    
   );
 }
