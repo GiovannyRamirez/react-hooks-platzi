@@ -6,6 +6,12 @@ import Favorite from './Favorite';
 import Search from './Search';
 
 const styles = {
+  Subtitle: {
+    alignItems: "center",
+    display: "flex",
+    justifyContent: "center",
+    marginBottom: "12px",
+  },
   Title: {
     margin: "2px 0",
   },
@@ -20,6 +26,11 @@ const styles = {
     margin: "5px auto 10px",
     maxWidth: "115px",
     padding: "2px",
+  },
+  FetchMore: {
+    height: "32px",
+    margin: "12px",
+    width: "92px",
   }
 }
 
@@ -28,7 +39,8 @@ const Characters = () => {
   const [favorites, dispatch] = useReducer(favoriteReducer, initialState);
 
   const [search, setSearch] = useState("");
-  const [characters, loading] = useCharacters(`?name=${search}`);
+  const [page, setPage] = useState(1);
+  const [characters, loading, more] = useCharacters(`?page=${page}`);
 
   const handleFavorite = favorite => {
     dispatch({ type: "ADD_TO_FAVORITE", payload: favorite })
@@ -54,6 +66,10 @@ const Characters = () => {
     setSearch(searchInput.current.value);
   }, []);
 
+  const handleFetchMore = () => {
+    setPage(prevState => prevState +1);
+  }
+
   return (
     <>
       {/* <Search search={search} searchInput={searchInput} handleSearch={() => setSearch(searchInput.current.value)} /> */}
@@ -74,7 +90,18 @@ const Characters = () => {
         ))}
       </div>
 
-      <h3 style={styles.Title}>Todos los personajes</h3>
+      <div style={styles.Subtitle}>
+        <h3 style={styles.Title}>Todos los personajes</h3>
+        <button
+          onClick={handleFetchMore}
+          style={styles.FetchMore}
+          disabled={!more}
+        >
+          Mostrar más
+        </button>
+        <h5 style={styles.Title}>Mostrando: {filteredCharacters.length} de {page} páginas</h5>
+      </div>
+
       {loading && <h5 style={styles.Title}>Cargando ...</h5>}
       {
         !loading && 
@@ -95,13 +122,6 @@ const Characters = () => {
           </div>
         ))}
       </div>    
-
-      {/* <button
-        onClick={handleFetchMore}
-        style={styles.FetchMore}
-      >
-
-      </button> */}
     </>    
   );
 }
