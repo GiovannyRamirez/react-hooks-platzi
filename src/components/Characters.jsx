@@ -70,6 +70,12 @@ const Characters = () => {
     setPage(prevState => prevState +1);
   }
 
+  const favoriteIds = [];
+
+  favorites?.favorites?.forEach(fav => {
+    favoriteIds.push(fav.id)
+  })
+
   return (
     <>
       {/* <Search search={search} searchInput={searchInput} handleSearch={() => setSearch(searchInput.current.value)} /> */}
@@ -116,9 +122,12 @@ const Characters = () => {
               character={character}
               favorite={handleFavorite}
             />
-            <div className="Add" style={styles.Favorite}onClick={() => handleFavorite(character)}>
-              Añadir favorito
-            </div>
+            {
+              !favoriteIds.includes(character.id) &&
+              <div className="Add" style={styles.Favorite}onClick={() => handleFavorite(character)}>
+                Añadir favorito
+              </div>
+            }
           </div>
         ))}
       </div>    
