@@ -21,6 +21,7 @@ const styles = {
   Data: {
     fontSize: "14px",
     margin: "0",
+    maxWidth: "130px"
   },
 };
 
